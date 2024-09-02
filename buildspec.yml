@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t demo-web-app .
+      - docker tag demo-web-app:latest 891377269907.dkr.ecr.ap-south-1.amazonaws.com/demo-web-app:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push 891377269907.dkr.ecr.ap-south-1.amazonaws.com/demo-web-app:latest
+
+artifacts:
+  files:
+    - '**/*'
+
